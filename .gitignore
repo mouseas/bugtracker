@@ -1,0 +1,4 @@
+target/*
+*.class
+*.bak
+src/com/martincarney/bugTracker/database/SecurityConstants.java
