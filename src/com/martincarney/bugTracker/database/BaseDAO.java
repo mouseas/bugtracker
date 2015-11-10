@@ -67,7 +67,7 @@ public abstract class BaseDAO {
 		
 		try {
 			getConnection();
-			rs = conn.getMetaData().getTables(null, null, tableName, null);
+			rs = conn.getMetaData().getTables(null, null, tableName.toLowerCase(), null);
 			return rs.next();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -89,7 +89,7 @@ public abstract class BaseDAO {
 		
 		try {
 			getConnection();
-			rs = conn.getMetaData().getColumns(null, null, tableName, columnName);
+			rs = conn.getMetaData().getColumns(null, null, tableName.toLowerCase(), columnName.toLowerCase());
 			return rs.next();
 		} catch (SQLException e) {
 			e.printStackTrace();

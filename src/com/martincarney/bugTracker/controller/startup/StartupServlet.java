@@ -5,6 +5,8 @@ import javax.servlet.http.HttpServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.martincarney.bugTracker.database.DBMaintenanceDAO;
+
 /**
  * Does server initialization tasks including updating the database
  *
@@ -16,8 +18,11 @@ public class StartupServlet extends HttpServlet {
 	
 	@Override
 	public void init() {
-		logger.debug("================Running StartupServlet================");
+		logger.info("================Running StartupServlet================");
 		
-		logger.debug("=================StartupServlet Done==================");
+		DBMaintenanceDAO dbMaintDAO = new DBMaintenanceDAO();
+		dbMaintDAO.initializeDatabase();
+		
+		logger.info("=================StartupServlet Done==================");
 	}
 }
