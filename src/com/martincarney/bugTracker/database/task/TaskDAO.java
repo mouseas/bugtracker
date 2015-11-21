@@ -95,7 +95,7 @@ public class TaskDAO extends BaseDAO {
 		List<LazyLoadedObj<Task>> result = new LinkedList<LazyLoadedObj<Task>>();
 		
 		String sql = "SELECT t.id, t.name, t.description \n" +
-				"FROM task t" +
+				"FROM task t \n" +
 				"ORDER BY t.name ASC, t.id DESC; \n";
 		
 		try {

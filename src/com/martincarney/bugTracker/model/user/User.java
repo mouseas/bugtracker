@@ -8,6 +8,14 @@ public class User implements ObjectWithId {
 	
 	private String username;
 	
+	private String fullName;
+	
+	private String emailAddress;
+	
+	private String phoneNumber;
+	
+	private String address;
+	
 	@Override
 	public long getId() {
 		return id;
@@ -24,6 +32,44 @@ public class User implements ObjectWithId {
 	
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+
+	
+	public String getEmailAddress() {
+		return emailAddress;
+	}
+
+	
+	public void setEmailAddress(String emailAddress) {
+		this.emailAddress = emailAddress;
+	}
+
+	
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	
+	public String getAddress() {
+		return address;
+	}
+
+	
+	public void setAddress(String address) {
+		this.address = address;
 	}
 	
 }

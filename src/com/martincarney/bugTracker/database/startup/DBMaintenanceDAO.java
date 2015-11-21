@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 
 import com.martincarney.bugTracker.database.BaseDAO;
 import com.martincarney.bugTracker.database.DBConst;
+import com.martincarney.bugTracker.database.UserDAO;
+import com.martincarney.bugTracker.model.user.User;
 
 /**
  * 
@@ -29,7 +31,11 @@ public class DBMaintenanceDAO extends BaseDAO {
 		}
 		
 		if (!doesTableExist("userinformation")) {
-			createMemberTable();
+			createUserTable();
+		}
+		
+		if (!doesTableExist("task")) {
+			createTaskTable();
 		}
 	}
 	
@@ -99,7 +105,7 @@ public class DBMaintenanceDAO extends BaseDAO {
 		}
 	}
 	
-	private void createMemberTable() {
+	private void createUserTable() {
 		PreparedStatement ps = null;
 		try {
 			getConnection();
@@ -124,6 +130,46 @@ public class DBMaintenanceDAO extends BaseDAO {
 					"	OIDS=FALSE \n" +
 					"); \n" +
 					"ALTER TABLE userinformation \n" +
+					"	OWNER TO " + DBConst.DEFAULT_DATABASE_USERNAME + "; \n";
+			
+			ps = conn.prepareStatement(sql);
+			ps.execute();
+			closeAll(ps);
+			
+			User sysadmin = new User();
+			sysadmin.setUsername("sysadmin");
+			sysadmin.setFullName("System Admin");
+			UserDAO userDAO = new UserDAO();
+			userDAO.insertUser(sysadmin);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeAll(ps);
+		}
+	}
+	
+	private void createTaskTable() {
+		PreparedStatement ps = null;
+		try {
+			getConnection();
+			
+			logger.info("Creating table \"task\".");
+			String sql = "-- Table: task \n" +
+					" \n" +
+					"-- DROP TABLE task; \n" +
+					" \n" +
+					"CREATE TABLE task ( \n" +
+					"	id bigserial NOT NULL, \n" +
+					"	name text NOT NULL, \n" +
+					"	description text NOT NULL, \n" +
+					"	createdby bigint NOT NULL REFERENCES userinformation (id), \n" +
+					"	updatedby bigint NOT NULL REFERENCES userinformation (id), \n" +
+					"	CONSTRAINT task_pkey PRIMARY KEY (id) \n" +
+					") \n" +
+					"WITH ( \n" +
+					"	OIDS=FALSE \n" +
+					"); \n" +
+					"ALTER TABLE task \n" +
 					"	OWNER TO " + DBConst.DEFAULT_DATABASE_USERNAME + "; \n";
 			
 			ps = conn.prepareStatement(sql);
