@@ -1,8 +1,8 @@
 package com.martincarney.bugTracker.model.user;
 
-import com.martincarney.bugTracker.model.common.ObjectWithID;
+import com.martincarney.bugTracker.model.common.ObjectWithId;
 
-public class User implements ObjectWithID {
+public class User implements ObjectWithId {
 	
 	private long id;
 	

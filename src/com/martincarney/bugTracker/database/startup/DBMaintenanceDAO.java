@@ -1,4 +1,4 @@
-package com.martincarney.bugTracker.database;
+package com.martincarney.bugTracker.database.startup;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

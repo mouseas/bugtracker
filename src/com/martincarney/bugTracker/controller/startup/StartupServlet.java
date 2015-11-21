@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.martincarney.bugTracker.database.DBMaintenanceDAO;
+import com.martincarney.bugTracker.database.startup.DBMaintenanceDAO;
 
 /**
  * Does server initialization tasks including updating the database
