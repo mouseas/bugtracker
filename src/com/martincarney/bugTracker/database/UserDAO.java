@@ -4,10 +4,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.martincarney.bugTracker.model.user.User;
 
 
 public class UserDAO extends BaseDAO {
+	
+	private static final Logger logger = LoggerFactory.getLogger(UserDAO.class);
 	
 	public void insertUser(User newUser) {
 		PreparedStatement ps = null;
@@ -30,7 +35,7 @@ public class UserDAO extends BaseDAO {
 			rs.next();
 			newUser.setId(rs.getLong("id"));
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logError(logger, e);
 		} finally {
 			closeAll(ps, rs);
 		}

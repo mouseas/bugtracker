@@ -7,6 +7,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.slf4j.Logger;
+
 /**
  * Base class for each DAO (Database Access Object) class. Contains common methods used
  * by child DAO classes.
@@ -192,5 +194,13 @@ public abstract class BaseDAO {
 	protected void closeAll(PreparedStatement ps, ResultSet rs) {
 		closeQuery(ps, rs);
 		closeConnection();
+	}
+	
+	protected void logError(Logger logger, Throwable e) {
+		if (logger == null) {
+			e.printStackTrace();
+		} else {
+			logger.error("Database Error:", e);
+		}
 	}
 }

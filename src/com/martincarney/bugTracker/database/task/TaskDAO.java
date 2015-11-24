@@ -6,12 +6,17 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.martincarney.bugTracker.database.BaseDAO;
 import com.martincarney.bugTracker.model.common.LazyLoadedObj;
 import com.martincarney.bugTracker.model.task.Task;
 import com.martincarney.bugTracker.model.user.User;
 
 public class TaskDAO extends BaseDAO {
+	
+	private static final Logger logger = LoggerFactory.getLogger(TaskDAO.class);
 	
 	public Task getTask(long taskId) {
 		PreparedStatement ps = null;
@@ -34,7 +39,7 @@ public class TaskDAO extends BaseDAO {
 			}
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logError(logger, e);
 		} finally {
 			closeAll(ps, rs);
 		}
@@ -57,7 +62,7 @@ public class TaskDAO extends BaseDAO {
 			
 			ps.execute();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logError(logger, e);
 		} finally {
 			closeAll(ps);
 		}
@@ -82,7 +87,7 @@ public class TaskDAO extends BaseDAO {
 			
 			ps.execute();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logError(logger, e);
 		} finally {
 			closeAll(ps);
 		}
@@ -114,7 +119,7 @@ public class TaskDAO extends BaseDAO {
 			}
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logError(logger, e);
 		} finally {
 			closeAll(ps, rs);
 		}

@@ -68,7 +68,7 @@ public class DBMaintenanceDAO extends BaseDAO {
 				return true;
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logError(logger, e);
 		} finally {
 			closeAll(ps, rs);
 		}
@@ -99,7 +99,7 @@ public class DBMaintenanceDAO extends BaseDAO {
 			ps.execute();
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logError(logger, e);
 		} finally {
 			closeAll(ps);
 		}
@@ -142,7 +142,7 @@ public class DBMaintenanceDAO extends BaseDAO {
 			UserDAO userDAO = new UserDAO();
 			userDAO.insertUser(sysadmin);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logError(logger, e);
 		} finally {
 			closeAll(ps);
 		}
@@ -175,7 +175,7 @@ public class DBMaintenanceDAO extends BaseDAO {
 			ps = conn.prepareStatement(sql);
 			ps.execute();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logError(logger, e);
 		} finally {
 			closeAll(ps);
 		}
