@@ -56,14 +56,7 @@ public class UserDAO extends BaseDAO {
 			
 			rs = ps.executeQuery();
 			if (rs.next()) {
-				User result = new User();
-				result.setId(rs.getLong("id"));
-				result.setFullName(rs.getString("fullname"));
-				result.setEmailAddress(rs.getString("emailaddress"));
-				result.setAddress(rs.getString("address"));
-				result.setPhoneNumber(rs.getString("phonenumber"));
-				result.setUsername(rs.getString("username"));
-				return result;
+				return buildUser(rs);
 			}
 		} catch (SQLException e) {
 			logError(logger, e);
@@ -71,5 +64,18 @@ public class UserDAO extends BaseDAO {
 			closeAll(ps, rs);
 		}
 		return null;
+	}
+	
+	protected User buildUser(ResultSet rs) throws SQLException {
+		User result = new User();
+		result.setId(rs.getLong("id"));
+		result.setFullName(rs.getString("fullname"));
+		result.setUsername(rs.getString("username"));
+		
+		result.setEmailAddress(rs.getString("emailaddress"));
+		result.setAddress(rs.getString("address"));
+		result.setPhoneNumber(rs.getString("phonenumber"));
+		
+		return result;
 	}
 }
