@@ -1,3 +1,4 @@
+<%@ include file="/WEB-INF/template/includes.jsp" %>
 <h1>Home page !</h1>
 <p>The time on the server is ${serverTime}.</p>
 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed
