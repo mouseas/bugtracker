@@ -11,13 +11,12 @@ body {
 }
 
 a {
-	color: #666666;
+	color: #6666CC;
 	text-decoration: none;
-	font-weight: bold;
 }
 
 a:hover {
-	color: #888888;
+	color: #8888EE;
 }
 
 .page {
@@ -63,6 +62,15 @@ a:hover {
 	border-right: none;
 }
 
+.menu ul li a {
+	font-weight: bold;
+	color: #666666;
+}
+
+.menu ul li a:hover {
+	color: #999999;
+}
+
 .body {
 	border: 1px solid #EEEEEE;
 	background-color: #FFFFFF;
@@ -87,6 +95,45 @@ a:hover {
 	border-top: 1px solid #DDDDDD;
 }
 
+.searchResults ul {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+.searchResults ul li {
+	margin-left: 0
+}
+
+.searchResults ul li a {
+}
+
+.recordDetails .detail {
+	display: block;
+	margin-top: 4px;
+	margin-bottom: 4px;
+}
+
+.recordDetails .detailLabel {
+	width: 120px;
+	display: inline-block;
+	text-align: right;
+	color: #AAAAAA;
+	margin-right: 10px;
+}
+
+.recordDetails .detailValue {
+	display: inline-block;
+}
+
+.recordDetails .detailValue .noValue {
+	font-style: italic;
+	color: #CCCCCC;
+}
+
+.pre {
+	whitespace: preserve;
+}
 
 @media screen and (min-width: 900px) {
 	.content {

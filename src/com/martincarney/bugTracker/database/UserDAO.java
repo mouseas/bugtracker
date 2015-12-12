@@ -40,4 +40,36 @@ public class UserDAO extends BaseDAO {
 			closeAll(ps, rs);
 		}
 	}
+	
+	public User getUser(long userId) {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		String sql = "SELECT ui.id, ui.fullname, ui.emailaddress, ui.address, ui.phonenumber, ui.username \n" +
+				"FROM userinformation ui \n" +
+				"WHERE ui.id = ?; \n";
+		
+		try {
+			ps = getConnection().prepareStatement(sql);
+			int i = 1;
+			ps.setLong(i++, userId);
+			
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				User result = new User();
+				result.setId(rs.getLong("id"));
+				result.setFullName(rs.getString("fullname"));
+				result.setEmailAddress(rs.getString("emailaddress"));
+				result.setAddress(rs.getString("address"));
+				result.setPhoneNumber(rs.getString("phonenumber"));
+				result.setUsername(rs.getString("username"));
+				return result;
+			}
+		} catch (SQLException e) {
+			logError(logger, e);
+		} finally {
+			closeAll(ps, rs);
+		}
+		return null;
+	}
 }

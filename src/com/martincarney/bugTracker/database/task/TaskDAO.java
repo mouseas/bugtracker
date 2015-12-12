@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.martincarney.bugTracker.database.BaseDAO;
+import com.martincarney.bugTracker.database.UserDAO;
 import com.martincarney.bugTracker.model.common.LazyLoadedObj;
 import com.martincarney.bugTracker.model.task.Task;
 import com.martincarney.bugTracker.model.user.User;
@@ -23,8 +24,9 @@ public class TaskDAO extends BaseDAO {
 		ResultSet rs = null;
 		Task task = null;
 		
-		String sql = "SELECT t.id, t.name, t.description \n" +
+		String sql = "SELECT t.id, t.name, t.description, t.createdby, ui_cb.fullname AS createdby_fullname \n" +
 				"FROM task t \n" +
+				"	LEFT OUTER JOIN userinformation ui_cb ON (t.createdby = ui_cb.id) \n" +
 				"WHERE t.id = ?::bigint; \n";
 		
 		try {
@@ -36,6 +38,13 @@ public class TaskDAO extends BaseDAO {
 			if (rs.next()) {
 				task = new Task(rs.getLong("id"), rs.getString("name"));
 				task.setDescription(rs.getString("description"));
+				task.setLazyLoadedTaskCreator(new LazyLoadedObj<User>(rs.getLong("createdby"), rs.getString("createdby_fullname")) {
+					@Override
+					public User getObj() {
+						UserDAO userDAO = new UserDAO();
+						return userDAO.getUser(objectId);
+					}
+				});
 			}
 			
 		} catch (SQLException e) {
