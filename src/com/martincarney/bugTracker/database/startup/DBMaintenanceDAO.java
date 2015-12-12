@@ -4,6 +4,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import liquibase.Contexts;
+import liquibase.Liquibase;
+import liquibase.changelog.DatabaseChangeLog;
+import liquibase.database.Database;
+import liquibase.database.DatabaseFactory;
+import liquibase.database.jvm.JdbcConnection;
+import liquibase.exception.DatabaseException;
+import liquibase.exception.LiquibaseException;
+import liquibase.resource.FileSystemResourceAccessor;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +36,7 @@ public class DBMaintenanceDAO extends BaseDAO {
 	 * to function.
 	 */
 	public void initializeDatabase() {
-		if (!doesDatabaseExist(DBConst.DEFAULT_DATABASE_NAME)) {
+		/*if (!doesDatabaseExist(DBConst.DEFAULT_DATABASE_NAME)) {
 			createDatabase(DBConst.DEFAULT_DATABASE_NAME);
 		}
 		
@@ -36,6 +46,19 @@ public class DBMaintenanceDAO extends BaseDAO {
 		
 		if (!doesTableExist("task")) {
 			createTaskTable();
+		}*/
+		
+		Liquibase liquibase = null;
+		DatabaseChangeLog changeLog = new DatabaseChangeLog("database-changelog_foo.xml");
+		Contexts contexts = new Contexts();
+		try {
+			conn = getConnection();
+			
+			Database db = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(conn));
+			liquibase = new Liquibase(changeLog, new FileSystemResourceAccessor(), db);
+			liquibase.update(contexts);
+		} catch (SQLException | LiquibaseException e) {
+			logError(logger, e);
 		}
 	}
 	
