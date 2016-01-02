@@ -42,7 +42,7 @@ public class TaskDAO extends BaseDAO {
 					@Override
 					public User getObj() {
 						UserDAO userDAO = new UserDAO();
-						return userDAO.getUser(objectId);
+						return userDAO.getUserById(objectId);
 					}
 				});
 			}

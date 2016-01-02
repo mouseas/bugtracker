@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.validation.BindingResult;
 
 import com.martincarney.bugTracker.controller.app.AppConstants;
 
@@ -82,6 +83,22 @@ public abstract class ControllerBase {
 	protected void saveError(HttpSession session, String plaintextErrorMessage) {
 		List<Object> errorsList = getMessageOrErrorList(session, AppConstants.ERRORS_KEY);
 		errorsList.add(plaintextErrorMessage);
+	}
+	
+	/**
+	 * Adds multiple errors messages to be displayed on the resulting page.
+	 */
+	protected void saveErrors(HttpServletRequest request, BindingResult errors) {
+		List<Object> errorsList = getMessageOrErrorList(request, AppConstants.ERRORS_KEY);
+		errorsList.addAll(errors.getAllErrors());
+	}
+
+	/**
+	 * Adds multiple errors messages to be displayed on the resulting page, even after a redirect.
+	 */
+	protected void saveErrors(HttpSession session, BindingResult errors) {
+		List<Object> errorsList = getMessageOrErrorList(session, AppConstants.ERRORS_KEY);
+		errorsList.addAll(errors.getAllErrors());
 	}
 	
 	/**

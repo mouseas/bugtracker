@@ -152,3 +152,7 @@ a:hover {
 		width: 300px;
 	}
 }
+
+span.missingTranslation {
+	color: #CC0000;
+}

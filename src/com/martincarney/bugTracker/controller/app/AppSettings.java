@@ -10,4 +10,6 @@ public class AppSettings {
 		throw new InstantiationException();
 	}
 	
+	public static boolean squelchMissingTranslationErrors = false;
+	
 }

@@ -2,9 +2,11 @@ package com.martincarney.bugTracker.view.taglib;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
@@ -12,11 +14,15 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.servlet.support.RequestContextUtils;
+
+import com.martincarney.bugTracker.controller.app.AppConstants;
+import com.martincarney.bugTracker.controller.app.AppSettings;
 
 public class MessagesAndErrorsTag extends TagSupport {
 	
@@ -26,14 +32,15 @@ public class MessagesAndErrorsTag extends TagSupport {
 	
 	@Override
 	public int doStartTag() throws JspException {
+		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 		
-		WebApplicationContext servletContext = WebApplicationContextUtils.getWebApplicationContext(pageContext.getServletContext());
-		Locale locale = RequestContextUtils.getLocale((HttpServletRequest) pageContext.getRequest());
+		WebApplicationContext servletContext = RequestContextUtils.findWebApplicationContext(request, pageContext.getServletContext());
+		Locale locale = RequestContextUtils.getLocale(request);
 		
 		JspWriter writer = pageContext.getOut();
 		try {
-			writer.print(doMessagesBox(servletContext, locale, "ERRORS", "errors"));
-			writer.print(doMessagesBox(servletContext, locale, "MESSAGES", "messages"));
+			writer.print(doMessagesBox(servletContext, locale, AppConstants.ERRORS_KEY, "errors"));
+			writer.print(doMessagesBox(servletContext, locale, AppConstants.MESSAGES_KEY, "messages"));
 		} catch (IOException e) {
 			throw new JspException("Exception in ErrorsTag doStartTag():" + e.toString());
 		}
@@ -95,7 +102,7 @@ public class MessagesAndErrorsTag extends TagSupport {
 			String messageText = null;
 			if (obj instanceof FieldError) {
 				FieldError e = (FieldError) obj;
-				Object[] args = {e.getRejectedValue()};
+//				Object[] args = {e.getRejectedValue()};
 				// SPRINGTODO FieldError is MessageSourceResolvable, we should add
 				// generic type mismatch translations in CBT (ex typeMismatch.int)
 				// so the user doesn't see the default message
@@ -103,7 +110,15 @@ public class MessagesAndErrorsTag extends TagSupport {
 				logger.error(e.getDefaultMessage());
 			} else if (obj instanceof ObjectError) {
 				ObjectError e = (ObjectError) obj;
-				messageText = servletContext.getMessage(e.getCode(), e.getArguments(), locale);
+				try {
+					messageText = servletContext.getMessage(e.getCode(), e.getArguments(), locale);
+				} catch (NoSuchMessageException nsme) {
+					if (!AppSettings.squelchMissingTranslationErrors) {
+						nsme.setStackTrace(Arrays.copyOf(nsme.getStackTrace(), 10));
+						logger.error("Translation not specified for key \"" + e.getCode() + "\"", nsme);
+					}
+					messageText = "<span class=\"missingTranslation\">" + e.getCode() + "</span>";
+				}
 //			} else if (obj instanceof ActionMessage) {
 //				ActionMessage message = (ActionMessage) obj;
 //				messageText = servletContext.getMessage(message.getKey(), message.getArguments(), locale);
@@ -112,11 +127,6 @@ public class MessagesAndErrorsTag extends TagSupport {
 			}
 			
 			if (messageText != null) {
-				// normalize the message styling, since we use bulleted lists now.
-				messageText = messageText.replaceAll("^\\s*&middot;\\s*", "") // remove &middot; from the start
-				.replaceAll("<br\\s*/?>$", "") // remove <br/> from the end
-				.trim(); // remove leading + trailing whitespace
-				
 				nullSafeAppend(results, messageText);
 				results.append("<br/>");
 			}
