@@ -26,7 +26,12 @@ public class TaskController extends ControllerBase{
 	
 //	private static final Logger logger = LoggerFactory.getLogger(TaskController.class);
 	
-	@RequestMapping(value={"/task/view"}, method=RequestMethod.GET)
+	@Override
+	protected String view(String endPoint) {
+		return super.view("task/" + endPoint);
+	}
+	
+	@RequestMapping(value="/task/view", method=RequestMethod.GET)
 	public String viewTask(ModelMap model, HttpServletRequest request) {
 		TaskDAO taskDAO = new TaskDAO();
 		
@@ -36,10 +41,10 @@ public class TaskController extends ControllerBase{
 		
 		model.put("task", task);
 		
-		return "view/task/viewTask";
+		return view("viewTask");
 	}
 	
-	@RequestMapping(value={"/task"}, method=RequestMethod.GET)
+	@RequestMapping(value="/task", method=RequestMethod.GET)
 	public String tasks(ModelMap model, HttpServletRequest request) {
 		TaskDAO taskDAO = new TaskDAO();
 		
@@ -47,6 +52,11 @@ public class TaskController extends ControllerBase{
 		
 		model.put("taskList", taskList);
 		
-		return "view/task/taskHome";
+		return view("taskHome");
+	}
+	
+	@RequestMapping(value="/task/create", method=RequestMethod.GET)
+	public String inputNewTask(ModelMap model, HttpServletRequest request) {
+		return view("newEditTask");
 	}
 }

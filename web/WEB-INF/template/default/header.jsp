@@ -1,1 +1,1 @@
-<div class="header">This is the header.</div>
+<div class="header">This is the header.${not empty sessionScope.CURRENT_USER ? ' Logged in as ' : ''}${sessionScope.CURRENT_USER}</div>

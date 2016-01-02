@@ -78,4 +78,32 @@ public class UserDAO extends BaseDAO {
 		
 		return result;
 	}
+
+	public boolean isLoginValid(String username, String rawPassword) {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		String sql = "SELECT id \n" +
+				"FROM userinformation ui \n" +
+				"WHERE ui.username ILIKE ?::text \n" +
+				"--AND ui.passwordhash = ?; \n";
+		
+		try {
+			ps = getConnection().prepareStatement(sql);
+			int i = 1;
+			ps.setString(i++, username);
+			//ps.setString(i++, rawPassword);
+			logger.warn("Passwords have not been implemented! This system is EXTREMELY INSECURE! Any correct username will successfully log in!");
+			
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				return true;
+			}
+		} catch (SQLException e) {
+			logError(logger, e);
+		} finally {
+			closeAll(ps, rs);
+		}
+		return false;
+	}
 }
