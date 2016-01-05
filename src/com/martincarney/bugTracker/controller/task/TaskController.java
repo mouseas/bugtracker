@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.martincarney.bugTracker.controller.ControllerBase;
 import com.martincarney.bugTracker.database.task.TaskDAO;
+import com.martincarney.bugTracker.form.task.TaskForm;
 import com.martincarney.bugTracker.model.common.LazyLoadedObj;
 import com.martincarney.bugTracker.model.task.Task;
 
@@ -57,6 +58,8 @@ public class TaskController extends ControllerBase{
 	
 	@RequestMapping(value="/task/create", method=RequestMethod.GET)
 	public String inputNewTask(ModelMap model, HttpServletRequest request) {
+		model.put("taskForm", new TaskForm());
+		
 		return view("newEditTask");
 	}
 }
