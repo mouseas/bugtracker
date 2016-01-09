@@ -1,5 +1,8 @@
 <%@ include file="/WEB-INF/template/includes.jsp" %>
 <h1>Task ${task.id}: ${fn:escapeXml(task.name)}</h1>
+
+<misc:messages/>
+
 <div class="recordDetails">
 	<div class="detail">
 		<div class="detailLabel">Description:</div>

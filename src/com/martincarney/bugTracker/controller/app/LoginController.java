@@ -31,7 +31,7 @@ public class LoginController extends ControllerBase {
 	
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String displayLogin(ModelMap model, HttpServletRequest request) {
-		if (request.getSession().getAttribute(AppConstants.Session.CURRENT_USER) != null) {
+		if (isLoggedIn(request)) {
 			saveMessage(request.getSession(), "Already logged in.");
 			return redirect("/");
 		}
@@ -43,7 +43,7 @@ public class LoginController extends ControllerBase {
 	
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String executeLogin(@ModelAttribute("loginForm") LoginForm loginForm, ModelMap model, BindingResult errors, HttpServletRequest request) {
-		if (request.getSession().getAttribute(AppConstants.Session.CURRENT_USER) != null) {
+		if (isLoggedIn(request)) {
 			saveMessage(request.getSession(), "Already logged in.");
 			return redirect("/");
 		}
@@ -65,7 +65,7 @@ public class LoginController extends ControllerBase {
 			
 			User currentUser = userDAO.getUserByUsername(loginForm.getUsername());
 			
-			request.getSession().setAttribute(AppConstants.Session.CURRENT_USER, currentUser);
+			request.getSession().setAttribute(AppConstants.SESSION_CURRENT_USER, currentUser);
 		} else {
 			errors.reject("errors.login.invalidCombo");
 		}
@@ -83,7 +83,7 @@ public class LoginController extends ControllerBase {
 	public String executeLogout(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		
-		session.removeAttribute(AppConstants.Session.CURRENT_USER);
+		session.removeAttribute(AppConstants.SESSION_CURRENT_USER);
 		saveMessage(request.getSession(), "Successfully logged out.");
 		
 		return redirect("/login");

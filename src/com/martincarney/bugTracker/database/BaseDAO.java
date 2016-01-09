@@ -28,7 +28,7 @@ public abstract class BaseDAO {
 	 * @throws SQLException if a database exception occurs.
 	 * @return {@link #conn}, returned for ease of use.
 	 */
-	protected Connection getConnection(String databaseName) throws SQLException {
+	protected Connection getConnection(String databaseName, int port) throws SQLException {
 		if (databaseName == null) {
 			// prevent creating a database with name "null" when trying to connect to no database
 			databaseName = DBConst.SCHEMA_DATABASE_NAME;
@@ -37,7 +37,7 @@ public abstract class BaseDAO {
 		if (conn == null || conn.isClosed()) {
 			try {
 				Class.forName("org.postgresql.Driver");
-				conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/" + databaseName,
+				conn = DriverManager.getConnection("jdbc:postgresql://localhost:" + port + "/" + databaseName,
 						DBConst.DEFAULT_DATABASE_USERNAME, SecurityConstants.POSTGRESQL_PASSWORD);
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
@@ -55,7 +55,7 @@ public abstract class BaseDAO {
 	 * @return {@link #conn}, returned for ease of use.
 	 */
 	protected Connection getConnection() throws SQLException {
-		return getConnection(DBConst.DEFAULT_DATABASE_NAME);
+		return getConnection(DBConst.DEFAULT_DATABASE_NAME, DBConst.DEFAULT_DATABASE_PORT);
 	}
 	
 	/**

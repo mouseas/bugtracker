@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
 
 import com.martincarney.bugTracker.controller.app.AppConstants;
+import com.martincarney.bugTracker.model.user.User;
 
 /**
  * Shared parent of controller classes, containing utility and convenience methods useful
@@ -21,7 +22,14 @@ public abstract class ControllerBase {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ControllerBase.class);
 	
-	public static long getIdParameter(HttpServletRequest request, String parameterName) {
+	/**
+	 * Gets a numeric parameter from the request. The parameter MUST be present, and MUST be parsable
+	 * as a Long.
+	 * @return
+	 */
+	// TODO make a more robust version that has options for whether it's required and whether to throw
+	// an exception if it's invalid. Should be able to accept a BindingResult, too.
+	public static long getNumericParameter(HttpServletRequest request, String parameterName) {
 		if (request == null || parameterName == null) {
 			throw new NullPointerException();
 		}
@@ -51,6 +59,15 @@ public abstract class ControllerBase {
 	 */
 	protected String redirect(String redirectTo) {
 		return "redirect:" + redirectTo;
+	}
+	
+	/**
+	 * Does the same as {@link #redirect(String)}, but also shows the user a generic "Access Denied" error message.
+	 * @param redirectTo path to redirect to. "/", for example, will redirect to the home page.
+	 */
+	protected String accessDenied(String redirectTo, HttpServletRequest request) {
+		saveError(request.getSession(), "Access Denied");
+		return redirect(redirectTo);
 	}
 	
 	/**
@@ -123,5 +140,18 @@ public abstract class ControllerBase {
 		}
 		
 		return (List<Object>) session.getAttribute(key);
+	}
+	
+	/**
+	 * Does a basic check to see if the user has logged in. This does not check any permissions or roles, just for the
+	 * presence or absence of an authentication.
+	 * @return
+	 */
+	protected boolean isLoggedIn(HttpServletRequest request) {
+		return request.getSession().getAttribute(AppConstants.SESSION_CURRENT_USER) != null;
+	}
+	
+	protected User getCurrentUser(HttpServletRequest request) {
+		return (User) request.getSession().getAttribute(AppConstants.SESSION_CURRENT_USER);
 	}
 }

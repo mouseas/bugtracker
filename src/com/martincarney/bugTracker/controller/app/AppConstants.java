@@ -5,9 +5,5 @@ public class AppConstants {
 	public static final String ERRORS_KEY = "ERRORS";
 	public static final String MESSAGES_KEY = "MESSAGES";
 	
-	class Session {
-		
-		public static final String CURRENT_USER = "CURRENT_USER";
-		
-	}
+	public static final String SESSION_CURRENT_USER = "CURRENT_USER";
 }

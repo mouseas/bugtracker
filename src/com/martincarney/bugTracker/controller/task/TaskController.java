@@ -9,10 +9,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.martincarney.bugTracker.controller.ControllerBase;
+import com.martincarney.bugTracker.controller.validation.ValidationUtils;
 import com.martincarney.bugTracker.database.task.TaskDAO;
 import com.martincarney.bugTracker.form.task.TaskForm;
 import com.martincarney.bugTracker.model.common.LazyLoadedObj;
@@ -36,7 +39,7 @@ public class TaskController extends ControllerBase{
 	public String viewTask(ModelMap model, HttpServletRequest request) {
 		TaskDAO taskDAO = new TaskDAO();
 		
-		long taskId = getIdParameter(request, "id");
+		long taskId = getNumericParameter(request, "id");
 		
 		Task task = taskDAO.getTask(taskId);
 		
@@ -46,7 +49,7 @@ public class TaskController extends ControllerBase{
 	}
 	
 	@RequestMapping(value="/task", method=RequestMethod.GET)
-	public String tasks(ModelMap model, HttpServletRequest request) {
+	public String tasksList(ModelMap model, HttpServletRequest request) {
 		TaskDAO taskDAO = new TaskDAO();
 		
 		List<LazyLoadedObj<Task>> taskList = taskDAO.getTaskList();
@@ -58,8 +61,91 @@ public class TaskController extends ControllerBase{
 	
 	@RequestMapping(value="/task/create", method=RequestMethod.GET)
 	public String inputNewTask(ModelMap model, HttpServletRequest request) {
+		if (!isLoggedIn(request)) {
+			return accessDenied("/task", request);
+		}
+		
 		model.put("taskForm", new TaskForm());
 		
-		return view("newEditTask");
+		return view("inputTask");
+	}
+	
+	@RequestMapping(value="/task/insert", method=RequestMethod.POST)
+	public String insertNewTask(@ModelAttribute TaskForm form, ModelMap model, HttpServletRequest request, BindingResult errors) {
+		if (!isLoggedIn(request)) {
+			return accessDenied("/task", request);
+		}
+		
+		TaskDAO taskDAO = new TaskDAO();
+		
+		// validate input
+		ValidationUtils.required(form.getName(), "Name", errors);
+		ValidationUtils.required(form.getDescription(), "Description", errors);
+		
+		if (errors.hasErrors()) {
+			saveErrors(request, errors);
+			return view("inputTask");
+		}
+		
+		// insert if validation passes
+		Task newTask = new Task(0, form.getName());
+		newTask.setDescription(form.getDescription());
+		
+		taskDAO.insertTask(newTask, getCurrentUser(request));
+		
+		return redirect("/task/view?id=" + newTask.getId());
+	}
+	
+	@RequestMapping(value="/task/edit", method=RequestMethod.GET)
+	public String inputEditTask(ModelMap model, HttpServletRequest request) {
+		if (!isLoggedIn(request)) {
+			return accessDenied("/task", request);
+		}
+		
+		TaskForm form = new TaskForm();
+		TaskDAO taskDAO = new TaskDAO();
+		
+		long taskId = getNumericParameter(request, "id");
+		
+		Task task = taskDAO.getTask(taskId);
+		
+		if (task == null) {
+			saveError(request.getSession(), "The specified task does not exist.");
+			return redirect("/task");
+		}
+		
+		form.setId(task.getId());
+		form.setName(task.getName());
+		form.setDescription(task.getDescription());
+		
+		model.put("taskForm", form);
+		
+		return view("inputTask");
+	}
+	
+	@RequestMapping(value="/task/update", method=RequestMethod.POST)
+	public String updateTask(@ModelAttribute TaskForm form, ModelMap model, HttpServletRequest request, BindingResult errors) {
+		if (!isLoggedIn(request)) {
+			return accessDenied("/task", request);
+		}
+		
+		TaskDAO taskDAO = new TaskDAO();
+		
+		// validate input
+		ValidationUtils.required(form.getName(), "Name", errors);
+		ValidationUtils.required(form.getDescription(), "Description", errors);
+		
+		if (errors.hasErrors()) {
+			saveErrors(request, errors);
+			return view("inputTask");
+		}
+		
+		// insert if validation passes
+		Task newTask = new Task(form.getId(), form.getName());
+		newTask.setDescription(form.getDescription());
+		
+		taskDAO.updateTask(newTask, getCurrentUser(request));
+		
+		return redirect("/task/view?id=" + newTask.getId());
 	}
 }

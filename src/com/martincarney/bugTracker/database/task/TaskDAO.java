@@ -56,11 +56,13 @@ public class TaskDAO extends BaseDAO {
 		return task;
 	}
 	
-	public void insertTask(Task newTask) {
+	public void insertTask(Task newTask, User taskCreator) {
 		PreparedStatement ps = null;
+		ResultSet rs = null;
 		
-		String sql = "INSERT INTO task (id, name, description) \n" +
-				"VALUES (?::bigint, ?::text, ?::text); \n";
+		String sql = "INSERT INTO task (id, name, description, createdby, updatedby) \n" +
+				"VALUES (?::bigint, ?::text, ?::text, ?::bigint, ?::bigint) \n" +
+				"RETURNING id; \n";
 		
 		try {
 			ps = getConnection().prepareStatement(sql);
@@ -68,8 +70,13 @@ public class TaskDAO extends BaseDAO {
 			ps.setLong(i++, newTask.getId());
 			ps.setString(i++, newTask.getName());
 			ps.setString(i++, newTask.getDescription());
+			ps.setLong(i++, taskCreator.getId());
+			ps.setLong(i++, taskCreator.getId());
 			
-			ps.execute();
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				newTask.setId(rs.getLong("id"));
+			}
 		} catch (SQLException e) {
 			logError(logger, e);
 		} finally {

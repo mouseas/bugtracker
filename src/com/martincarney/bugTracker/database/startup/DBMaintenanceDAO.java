@@ -55,7 +55,7 @@ public class DBMaintenanceDAO extends BaseDAO {
 		ResultSet rs = null;
 		
 		try {
-			conn = getConnection(DBConst.SCHEMA_DATABASE_NAME);
+			conn = getConnection(DBConst.SCHEMA_DATABASE_NAME, DBConst.DEFAULT_DATABASE_PORT);
 			
 			String sql = "SELECT datname \n" +
 					"FROM pg_database db \n" +
@@ -90,7 +90,7 @@ public class DBMaintenanceDAO extends BaseDAO {
 		PreparedStatement ps = null;
 		
 		try {
-			getConnection(DBConst.SCHEMA_DATABASE_NAME);
+			getConnection(DBConst.SCHEMA_DATABASE_NAME, DBConst.DEFAULT_DATABASE_PORT);
 			
 			logger.info("Creating database \"" + databaseName + "\".");
 			String sql = "CREATE DATABASE " + databaseName + " \n";

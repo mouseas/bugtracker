@@ -120,6 +120,7 @@ a:hover {
 	text-align: right;
 	color: #AAAAAA;
 	margin-right: 10px;
+	vertical-align: top;
 }
 
 .recordDetails .detailValue {
@@ -131,8 +132,53 @@ a:hover {
 	color: #CCCCCC;
 }
 
+.recordDetails .detail input[type=text] {
+	width: 300px;
+}
+
+.recordDetails .detail input[type=text].longInput  {
+	width: 500px;
+}
+
+.recordDetails .detail textarea {
+	width: 500px;
+	height: 150px;
+	resize: vertical;
+}
+
+.buttons {
+	display: block;
+	text-align: right;
+	font-family: Helvetica, Verdana, sans-serif;
+}
+
+.buttons button {
+	text-align: center;
+	background-color: #333333;
+	color: #CCCCCC;
+	min-width: 100px;
+	height: 30px;
+	margin-right: 15px;
+	border: none;
+	font-weight: bold;
+	text-transform: uppercase;
+	cursor: pointer;
+}
+
+.buttons button:hover {
+	background-color: #444444;
+}
+
+.buttons button.save {
+	
+}
+
+.buttons button.cancel {
+	
+}
+
 .pre {
-	whitespace: preserve;
+	white-space: pre-wrap;
 }
 
 @media screen and (min-width: 900px) {
