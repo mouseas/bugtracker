@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import com.martincarney.bugTracker.database.BaseDAO;
 import com.martincarney.bugTracker.database.UserDAO;
 import com.martincarney.bugTracker.model.common.LazyLoadedObj;
+import com.martincarney.bugTracker.model.common.SearchResultItem;
+import com.martincarney.bugTracker.model.common.SearchResultSet;
 import com.martincarney.bugTracker.model.task.Task;
 import com.martincarney.bugTracker.model.user.User;
 
@@ -38,13 +40,9 @@ public class TaskDAO extends BaseDAO {
 			if (rs.next()) {
 				task = new Task(rs.getLong("id"), rs.getString("name"));
 				task.setDescription(rs.getString("description"));
-				task.setLazyLoadedTaskCreator(new LazyLoadedObj<User>(rs.getLong("createdby"), rs.getString("createdby_fullname")) {
-					@Override
-					public User getObj() {
-						UserDAO userDAO = new UserDAO();
-						return userDAO.getUserById(objectId);
-					}
-				});
+				task.setTaskCreator(new User());
+				task.getTaskCreator().setId(rs.getLong("createdby"));
+				task.getTaskCreator().setFullName(rs.getString("createdby_fullname"));
 			}
 			
 		} catch (SQLException e) {
@@ -109,11 +107,11 @@ public class TaskDAO extends BaseDAO {
 		}
 	}
 	
-	public List<LazyLoadedObj<Task>> getTaskList() {
+	public SearchResultSet getTaskList() {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		LazyLoadedObj<Task> task = null;
-		List<LazyLoadedObj<Task>> result = new LinkedList<LazyLoadedObj<Task>>();
+		SearchResultSet result = new SearchResultSet(Task.class, "Description");
+		SearchResultItem task = null;
 		
 		String sql = "SELECT t.id, t.name, t.description \n" +
 				"FROM task t \n" +
@@ -124,14 +122,8 @@ public class TaskDAO extends BaseDAO {
 			rs = ps.executeQuery();
 			
 			while (rs.next()) {
-				task = new LazyLoadedObj<Task>(rs.getLong("id"), rs.getString("name")) {
-					@Override
-					public Task getObj() {
-						TaskDAO taskDAO = new TaskDAO();
-						return taskDAO.getTask(getObjId());
-					}
-				};
-				result.add(task);
+				task = new SearchResultItem(rs.getLong("id"), rs.getString("name"), Task.class, rs.getString("description"));
+				result.getSearchResults().add(task);
 			}
 			
 		} catch (SQLException e) {

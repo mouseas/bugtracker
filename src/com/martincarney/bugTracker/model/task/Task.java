@@ -23,17 +23,17 @@ public class Task implements ObjectWithNameAndId {
 	
 	private LazyLoadedObj<FlowState> lazyLoadedFlowState;
 	
-	private Collection<LazyLoadedObj<User>> lazyLoadedAssignedProgrammers;
+	private Collection<User> assignedProgrammers;
 	
-	private Collection<LazyLoadedObj<User>> lazyLoadedAssignedTesters;
+	private Collection<User> assignedTesters;
 	
-	private Collection<LazyLoadedObj<User>> lazyLoadedPeopleWantingUpdates;
+	private Collection<User> peopleWantingUpdates;
 	
-	private LazyLoadedObj<User> lazyLoadedTaskCreator;
+	private User taskCreator;
 	
-	private LazyLoadedObj<Task> parentTask;
+	private Task parentTask;
 	
-	private Collection<LazyLoadedObj<Task>> childTasks;
+	private Collection<Task> childTasks;
 	
 	private Calendar createdOn;
 	
@@ -41,13 +41,13 @@ public class Task implements ObjectWithNameAndId {
 	
 	private Calendar workFinishedOn;
 	
-	private LazyLoadedObj<Priority> lazyLoadedPriority;
+	private Priority priority;
 	
 	private Set<TaskTag> tags;
 	
-	private Collection<LazyLoadedObj<TaskLog>> lazyLoadedTaskLogs;
+	private Collection<TaskLog> taskLogs;
 	
-	private Collection<LazyLoadedObj<FileAttachment>> lazyLoadedFileAttachments;
+	private Collection<FileAttachment> fileAttachments;
 	
 	public Task(long id, String name) {
 		this.id = id;
@@ -106,54 +106,6 @@ public class Task implements ObjectWithNameAndId {
 		this.lazyLoadedFlowState = lazyLoadedFlowState;
 	}
 	
-	public Collection<LazyLoadedObj<User>> getLazyLoadedAssignedProgrammers() {
-		return lazyLoadedAssignedProgrammers;
-	}
-	
-	public void setLazyLoadedAssignedProgrammers(Collection<LazyLoadedObj<User>> lazyLoadedAssignedProgrammers) {
-		this.lazyLoadedAssignedProgrammers = lazyLoadedAssignedProgrammers;
-	}
-	
-	public Collection<LazyLoadedObj<User>> getLazyLoadedAssignedTesters() {
-		return lazyLoadedAssignedTesters;
-	}
-	
-	public void setLazyLoadedAssignedTesters(Collection<LazyLoadedObj<User>> lazyLoadedAssignedTesters) {
-		this.lazyLoadedAssignedTesters = lazyLoadedAssignedTesters;
-	}
-	
-	public Collection<LazyLoadedObj<User>> getLazyLoadedPeopleWantingUpdates() {
-		return lazyLoadedPeopleWantingUpdates;
-	}
-	
-	public void setLazyLoadedPeopleWantingUpdates(Collection<LazyLoadedObj<User>> lazyLoadedPeopleWantingUpdates) {
-		this.lazyLoadedPeopleWantingUpdates = lazyLoadedPeopleWantingUpdates;
-	}
-	
-	public LazyLoadedObj<User> getLazyLoadedTaskCreator() {
-		return lazyLoadedTaskCreator;
-	}
-	
-	public void setLazyLoadedTaskCreator(LazyLoadedObj<User> lazyLoadedTaskCreator) {
-		this.lazyLoadedTaskCreator = lazyLoadedTaskCreator;
-	}
-	
-	public LazyLoadedObj<Task> getParentTask() {
-		return parentTask;
-	}
-	
-	public void setParentTask(LazyLoadedObj<Task> parentTask) {
-		this.parentTask = parentTask;
-	}
-	
-	public Collection<LazyLoadedObj<Task>> getChildTasks() {
-		return childTasks;
-	}
-	
-	public void setChildTasks(Collection<LazyLoadedObj<Task>> childTasks) {
-		this.childTasks = childTasks;
-	}
-	
 	public Calendar getCreatedOn() {
 		return createdOn;
 	}
@@ -178,12 +130,12 @@ public class Task implements ObjectWithNameAndId {
 		this.workFinishedOn = workFinishedOn;
 	}
 	
-	public LazyLoadedObj<Priority> getLazyLoadedPriority() {
-		return lazyLoadedPriority;
+	public Priority getPriority() {
+		return priority;
 	}
 	
-	public void setLazyLoadedPriority(LazyLoadedObj<Priority> lazyLoadedPriority) {
-		this.lazyLoadedPriority = lazyLoadedPriority;
+	public void setPriority(Priority priority) {
+		this.priority = priority;
 	}
 	
 	public Set<TaskTag> getTags() {
@@ -194,20 +146,67 @@ public class Task implements ObjectWithNameAndId {
 		this.tags = tags;
 	}
 	
-	public Collection<LazyLoadedObj<TaskLog>> getLazyLoadedTaskLogs() {
-		return lazyLoadedTaskLogs;
+	public Collection<User> getAssignedProgrammers() {
+		return assignedProgrammers;
 	}
 	
-	public void setLazyLoadedTaskLogs(Collection<LazyLoadedObj<TaskLog>> lazyLoadedTaskLogs) {
-		this.lazyLoadedTaskLogs = lazyLoadedTaskLogs;
+	public void setAssignedProgrammers(Collection<User> assignedProgrammers) {
+		this.assignedProgrammers = assignedProgrammers;
 	}
 	
-	public Collection<LazyLoadedObj<FileAttachment>> getLazyLoadedFileAttachments() {
-		return lazyLoadedFileAttachments;
+	public Collection<User> getAssignedTesters() {
+		return assignedTesters;
 	}
 	
-	public void setLazyLoadedFileAttachments(Collection<LazyLoadedObj<FileAttachment>> lazyLoadedFileAttachments) {
-		this.lazyLoadedFileAttachments = lazyLoadedFileAttachments;
+	public void setAssignedTesters(Collection<User> assignedTesters) {
+		this.assignedTesters = assignedTesters;
 	}
 	
+	public Collection<User> getPeopleWantingUpdates() {
+		return peopleWantingUpdates;
+	}
+	
+	public void setPeopleWantingUpdates(Collection<User> peopleWantingUpdates) {
+		this.peopleWantingUpdates = peopleWantingUpdates;
+	}
+	
+	public User getTaskCreator() {
+		return taskCreator;
+	}
+	
+	public void setTaskCreator(User taskCreator) {
+		this.taskCreator = taskCreator;
+	}
+	
+	public Task getParentTask() {
+		return parentTask;
+	}
+	
+	public void setParentTask(Task parentTask) {
+		this.parentTask = parentTask;
+	}
+	
+	public Collection<Task> getChildTasks() {
+		return childTasks;
+	}
+	
+	public void setChildTasks(Collection<Task> childTasks) {
+		this.childTasks = childTasks;
+	}
+	
+	public Collection<TaskLog> getTaskLogs() {
+		return taskLogs;
+	}
+	
+	public void setTaskLogs(Collection<TaskLog> taskLogs) {
+		this.taskLogs = taskLogs;
+	}
+	
+	public Collection<FileAttachment> getFileAttachments() {
+		return fileAttachments;
+	}
+	
+	public void setFileAttachments(Collection<FileAttachment> fileAttachments) {
+		this.fileAttachments = fileAttachments;
+	}
 }

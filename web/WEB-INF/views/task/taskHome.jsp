@@ -5,12 +5,12 @@
 
 <div class="searchResults">
 	<ul>
-		<c:forEach items="${taskList}" var="task">
+		<c:forEach items="${taskList.searchResults}" var="task">
 			<li>
-				<a href="<c:url value='/task/view'/>?id=${task.objId}">${fn:escapeXml(task.objName)}</a>
+				<a href="<c:url value='/task/view'/>?id=${task.id}">${fn:escapeXml(task.name)}</a>
 			</li>
 		</c:forEach>
-		<c:if test="${empty taskList}">
+		<c:if test="${empty taskList.searchResults}">
 			<li class="noResult">No tasks found.</li>
 		</c:if>
 	</ul>

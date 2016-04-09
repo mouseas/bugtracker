@@ -19,6 +19,7 @@ import com.martincarney.bugTracker.controller.validation.ValidationUtils;
 import com.martincarney.bugTracker.database.task.TaskDAO;
 import com.martincarney.bugTracker.form.task.TaskForm;
 import com.martincarney.bugTracker.model.common.LazyLoadedObj;
+import com.martincarney.bugTracker.model.common.SearchResultSet;
 import com.martincarney.bugTracker.model.task.Task;
 
 /**
@@ -43,16 +44,27 @@ public class TaskController extends ControllerBase{
 		
 		Task task = taskDAO.getTask(taskId);
 		
+		if (task == null) {
+			saveError(request.getSession(), "Task not found.");
+			redirect("/task");
+		}
+		
 		model.put("task", task);
 		
 		return view("viewTask");
+	}
+	
+	@RequestMapping(value="/task/**")
+	public String tasks404(ModelMap model, HttpServletRequest request) {
+		saveError(request.getSession(), "Page not found.");
+		return redirect("/task");
 	}
 	
 	@RequestMapping(value="/task", method=RequestMethod.GET)
 	public String tasksList(ModelMap model, HttpServletRequest request) {
 		TaskDAO taskDAO = new TaskDAO();
 		
-		List<LazyLoadedObj<Task>> taskList = taskDAO.getTaskList();
+		SearchResultSet taskList = taskDAO.getTaskList();
 		
 		model.put("taskList", taskList);
 		
